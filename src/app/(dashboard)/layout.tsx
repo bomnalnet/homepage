@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import { useRouter } from 'next/navigation';
 import Sidebar from '@/components/layout/Sidebar';
 import Header from '@/components/layout/Header';
 import { User } from '@/types';
@@ -10,6 +11,7 @@ export default function DashboardLayout({
 }: {
   children: React.ReactNode;
 }) {
+  const router = useRouter();
   const [user, setUser] = useState<User | null>(null);
   const [sidebarCollapsed, setSidebarCollapsed] = useState(true);
   const [loading, setLoading] = useState(true);
@@ -18,17 +20,17 @@ export default function DashboardLayout({
     try {
       const stored = localStorage.getItem('bomnal_current_user');
       if (!stored) {
-        window.location.href = '/login';
+        router.replace('/login');
         return;
       }
       const parsed: User = JSON.parse(stored);
       setUser(parsed);
     } catch {
-      window.location.href = '/login';
+      router.replace('/login');
       return;
     }
     setLoading(false);
-  }, []);
+  }, [router]);
 
   // Collapse sidebar by default on mobile, expand on desktop
   useEffect(() => {

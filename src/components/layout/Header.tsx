@@ -2,7 +2,7 @@
 
 import { useState, useRef, useEffect } from 'react';
 import Link from 'next/link';
-import { usePathname } from 'next/navigation';
+import { usePathname, useRouter } from 'next/navigation';
 import { User } from '@/types';
 
 interface HeaderProps {
@@ -40,6 +40,7 @@ const integrations = [
 
 export default function Header({ user, notifications }: HeaderProps) {
   const pathname = usePathname();
+  const router = useRouter();
   const [searchQuery, setSearchQuery] = useState('');
   const [userMenuOpen, setUserMenuOpen] = useState(false);
   const menuRef = useRef<HTMLDivElement>(null);
@@ -56,7 +57,7 @@ export default function Header({ user, notifications }: HeaderProps) {
 
   const handleLogout = () => {
     localStorage.removeItem('bomnal_current_user');
-    window.location.href = '/login';
+    router.replace('/login');
   };
 
   return (
