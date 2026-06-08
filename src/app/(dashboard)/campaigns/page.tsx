@@ -32,10 +32,10 @@ export default function CampaignsPage() {
 
   const statusStyle = (status: string) => {
     switch (status) {
-      case '진행중': return 'bg-green-100 text-green-700';
-      case '대기': return 'bg-yellow-100 text-yellow-700';
-      case '완료': return 'bg-gray-100 text-gray-600';
-      default: return 'bg-gray-100 text-gray-600';
+      case '진행중': return 'bg-green-500/20 text-green-400';
+      case '대기': return 'bg-yellow-500/20 text-yellow-400';
+      case '완료': return 'bg-slate-700/50 text-slate-400';
+      default: return 'bg-slate-700/50 text-slate-400';
     }
   };
 
@@ -43,29 +43,29 @@ export default function CampaignsPage() {
     new Intl.NumberFormat('ko-KR').format(n) + '원';
 
   return (
-    <div className="min-h-screen bg-gray-50 p-6 lg:p-8">
+    <div className="p-6 lg:p-8">
       {/* Header */}
       <div className="mb-8">
-        <h1 className="text-2xl font-bold text-gray-900">캠페인 관리</h1>
-        <p className="mt-1 text-sm text-gray-500">마케팅 캠페인을 계획하고 성과를 추적합니다.</p>
+        <h1 className="text-2xl font-bold text-white">캠페인 관리</h1>
+        <p className="mt-1 text-sm text-slate-400">마케팅 캠페인을 계획하고 성과를 추적합니다.</p>
       </div>
 
       {/* Actions */}
       <div className="mb-6 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-        <div className="flex gap-1 rounded-lg bg-white border border-gray-200 p-1">
+        <div className="flex gap-1 rounded-lg bg-slate-800 border border-slate-700/50 p-1">
           {filterTabs.map((tab) => (
             <button
               key={tab}
               onClick={() => setActiveTab(tab)}
               className={`rounded-md px-4 py-2 text-sm font-medium transition-colors ${
-                activeTab === tab ? 'bg-blue-600 text-white shadow-sm' : 'text-gray-600 hover:bg-gray-100'
+                activeTab === tab ? 'bg-blue-600 text-white shadow-lg shadow-black/20' : 'text-slate-400 hover:bg-slate-700'
               }`}
             >
               {tab}
             </button>
           ))}
         </div>
-        <button className="inline-flex items-center gap-2 rounded-lg bg-blue-600 px-4 py-2.5 text-sm font-medium text-white shadow-sm hover:bg-blue-700 transition-colors">
+        <button className="inline-flex items-center gap-2 rounded-lg bg-blue-600 px-4 py-2.5 text-sm font-medium text-white shadow-lg shadow-black/20 hover:bg-blue-500 transition-colors">
           <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
           </svg>
@@ -76,31 +76,31 @@ export default function CampaignsPage() {
       {/* Campaign Cards */}
       <div className="grid gap-6 sm:grid-cols-2 xl:grid-cols-2">
         {filtered.map((campaign) => (
-          <div key={campaign.id} className="rounded-xl bg-white border border-gray-200 shadow-sm p-6 hover:shadow-md transition-shadow">
+          <div key={campaign.id} className="rounded-2xl bg-slate-900/80 border border-slate-700/50 shadow-lg shadow-black/20 p-6 hover:shadow-xl hover:shadow-black/30 transition-shadow">
             <div className="flex items-start justify-between mb-4">
               <div>
-                <h3 className="text-lg font-semibold text-gray-900">{campaign.name}</h3>
-                <p className="mt-0.5 text-xs text-gray-500">{campaign.channel}</p>
+                <h3 className="text-lg font-semibold text-white">{campaign.name}</h3>
+                <p className="mt-0.5 text-xs text-slate-500">{campaign.channel}</p>
               </div>
               <span className={`inline-flex rounded-full px-2.5 py-0.5 text-xs font-medium ${statusStyle(campaign.status)}`}>
                 {campaign.status}
               </span>
             </div>
 
-            <div className="mb-4 text-sm text-gray-500">
+            <div className="mb-4 text-sm text-slate-400">
               <span>{campaign.period}</span>
             </div>
 
             {/* Progress */}
             <div className="mb-4">
               <div className="flex items-center justify-between text-sm mb-1.5">
-                <span className="text-gray-600">진행률</span>
-                <span className="font-medium text-gray-900">{campaign.progress}%</span>
+                <span className="text-slate-400">진행률</span>
+                <span className="font-medium text-white">{campaign.progress}%</span>
               </div>
-              <div className="h-2 w-full rounded-full bg-gray-100">
+              <div className="h-2 w-full rounded-full bg-slate-800">
                 <div
                   className={`h-2 rounded-full transition-all ${
-                    campaign.status === '완료' ? 'bg-gray-400' : 'bg-blue-500'
+                    campaign.status === '완료' ? 'bg-slate-500' : 'bg-blue-500'
                   }`}
                   style={{ width: `${campaign.progress}%` }}
                 />
@@ -108,18 +108,18 @@ export default function CampaignsPage() {
             </div>
 
             {/* Budget & ROI */}
-            <div className="grid grid-cols-3 gap-3 rounded-lg bg-gray-50 p-3">
+            <div className="grid grid-cols-3 gap-3 rounded-lg bg-slate-800/50 p-3">
               <div>
-                <p className="text-xs text-gray-500">예산</p>
-                <p className="text-sm font-semibold text-gray-900">{formatWon(campaign.budget)}</p>
+                <p className="text-xs text-slate-500">예산</p>
+                <p className="text-sm font-semibold text-white">{formatWon(campaign.budget)}</p>
               </div>
               <div>
-                <p className="text-xs text-gray-500">집행액</p>
-                <p className="text-sm font-semibold text-gray-900">{formatWon(campaign.spent)}</p>
+                <p className="text-xs text-slate-500">집행액</p>
+                <p className="text-sm font-semibold text-white">{formatWon(campaign.spent)}</p>
               </div>
               <div>
-                <p className="text-xs text-gray-500">ROI</p>
-                <p className={`text-sm font-semibold ${campaign.roi >= 2 ? 'text-green-600' : campaign.roi > 0 ? 'text-yellow-600' : 'text-gray-400'}`}>
+                <p className="text-xs text-slate-500">ROI</p>
+                <p className={`text-sm font-semibold ${campaign.roi >= 2 ? 'text-green-400' : campaign.roi > 0 ? 'text-yellow-400' : 'text-slate-500'}`}>
                   {campaign.roi > 0 ? `${campaign.roi}x` : '-'}
                 </p>
               </div>

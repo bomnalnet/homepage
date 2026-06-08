@@ -59,36 +59,36 @@ export default function AIPage() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 p-6 lg:p-8">
+    <div className="p-6 lg:p-8">
       {/* Header */}
       <div className="mb-8">
-        <h1 className="text-2xl font-bold text-gray-900">AI 업무</h1>
-        <p className="mt-1 text-sm text-gray-500">AI 도구 연동 및 자동화 규칙을 관리합니다.</p>
+        <h1 className="text-2xl font-bold text-white">AI 업무</h1>
+        <p className="mt-1 text-sm text-slate-400">AI 도구 연동 및 자동화 규칙을 관리합니다.</p>
       </div>
 
       {/* AI Tools Grid */}
       <div className="mb-8">
-        <h2 className="mb-4 text-lg font-semibold text-gray-800">연동 AI 도구</h2>
+        <h2 className="mb-4 text-lg font-semibold text-slate-100">연동 AI 도구</h2>
         <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
           {aiTools.map((tool) => (
-            <div key={tool.id} className="rounded-xl bg-white border border-gray-200 shadow-sm p-5 hover:shadow-md transition-shadow">
+            <div key={tool.id} className="rounded-2xl bg-slate-900/80 border border-slate-700/50 shadow-lg shadow-black/20 p-5 hover:shadow-xl hover:shadow-black/30 transition-shadow">
               <div className="flex items-center gap-3 mb-3">
                 <div className={`flex h-10 w-10 items-center justify-center rounded-lg ${tool.color} text-xl`}>
                   {tool.icon}
                 </div>
                 <div>
-                  <h3 className="font-semibold text-gray-900">{tool.name}</h3>
-                  <span className={`text-xs font-medium ${tool.status === '연결됨' ? 'text-green-600' : 'text-gray-400'}`}>
+                  <h3 className="font-semibold text-white">{tool.name}</h3>
+                  <span className={`text-xs font-medium ${tool.status === '연결됨' ? 'text-green-400' : 'text-slate-500'}`}>
                     {tool.status === '연결됨' ? '● 연결됨' : '○ 미연결'}
                   </span>
                 </div>
               </div>
-              <p className="mb-4 text-sm text-gray-500">{tool.description}</p>
+              <p className="mb-4 text-sm text-slate-400">{tool.description}</p>
               <button
                 className={`w-full rounded-lg py-2 text-sm font-medium transition-colors ${
                   tool.status === '연결됨'
-                    ? 'bg-blue-50 text-blue-600 hover:bg-blue-100'
-                    : 'bg-gray-100 text-gray-500 hover:bg-gray-200'
+                    ? 'bg-blue-600/20 text-blue-400 hover:bg-blue-600/30'
+                    : 'bg-slate-800 text-slate-400 hover:bg-slate-700'
                 }`}
               >
                 {tool.status === '연결됨' ? '실행' : '연결하기'}
@@ -100,31 +100,31 @@ export default function AIPage() {
 
       {/* AI Action Logs */}
       <div className="mb-8">
-        <h2 className="mb-4 text-lg font-semibold text-gray-800">AI 작업 로그</h2>
-        <div className="overflow-hidden rounded-xl bg-white border border-gray-200 shadow-sm">
+        <h2 className="mb-4 text-lg font-semibold text-slate-100">AI 작업 로그</h2>
+        <div className="overflow-hidden rounded-2xl bg-slate-900/80 border border-slate-700/50 shadow-lg shadow-black/20">
           <div className="overflow-x-auto">
             <table className="w-full text-sm">
               <thead>
-                <tr className="border-b border-gray-200 bg-gray-50">
-                  <th className="px-6 py-3.5 text-left font-semibold text-gray-700">도구</th>
-                  <th className="px-6 py-3.5 text-left font-semibold text-gray-700">작업</th>
-                  <th className="px-6 py-3.5 text-left font-semibold text-gray-700">결과</th>
-                  <th className="px-6 py-3.5 text-left font-semibold text-gray-700">시간</th>
+                <tr className="border-b border-slate-700/50 bg-slate-800/50">
+                  <th className="px-6 py-3.5 text-left font-semibold text-slate-300">도구</th>
+                  <th className="px-6 py-3.5 text-left font-semibold text-slate-300">작업</th>
+                  <th className="px-6 py-3.5 text-left font-semibold text-slate-300">결과</th>
+                  <th className="px-6 py-3.5 text-left font-semibold text-slate-300">시간</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-gray-100">
+              <tbody className="divide-y divide-slate-700/50">
                 {aiLogs.map((log) => (
-                  <tr key={log.id} className="hover:bg-gray-50 transition-colors">
-                    <td className="px-6 py-3.5 font-medium text-gray-900">{log.tool}</td>
-                    <td className="px-6 py-3.5 text-gray-700">{log.action}</td>
+                  <tr key={log.id} className="hover:bg-slate-800/30 transition-colors">
+                    <td className="px-6 py-3.5 font-medium text-white">{log.tool}</td>
+                    <td className="px-6 py-3.5 text-slate-300">{log.action}</td>
                     <td className="px-6 py-3.5">
                       <span className={`inline-flex rounded-full px-2.5 py-0.5 text-xs font-medium ${
-                        log.result === '완료' ? 'bg-green-100 text-green-700' : 'bg-yellow-100 text-yellow-700'
+                        log.result === '완료' ? 'bg-green-500/20 text-green-400' : 'bg-yellow-500/20 text-yellow-400'
                       }`}>
                         {log.result}
                       </span>
                     </td>
-                    <td className="px-6 py-3.5 text-gray-500">{log.timestamp}</td>
+                    <td className="px-6 py-3.5 text-slate-400">{log.timestamp}</td>
                   </tr>
                 ))}
               </tbody>
@@ -136,8 +136,8 @@ export default function AIPage() {
       {/* Automation Rules */}
       <div>
         <div className="mb-4 flex items-center justify-between">
-          <h2 className="text-lg font-semibold text-gray-800">AI 자동화 규칙</h2>
-          <button className="inline-flex items-center gap-2 rounded-lg bg-blue-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-blue-700 transition-colors">
+          <h2 className="text-lg font-semibold text-slate-100">AI 자동화 규칙</h2>
+          <button className="inline-flex items-center gap-2 rounded-lg bg-blue-600 px-4 py-2 text-sm font-medium text-white shadow-lg shadow-black/20 hover:bg-blue-500 transition-colors">
             <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
             </svg>
@@ -146,18 +146,18 @@ export default function AIPage() {
         </div>
         <div className="space-y-3">
           {rules.map((rule) => (
-            <div key={rule.id} className="flex items-center justify-between rounded-xl bg-white border border-gray-200 shadow-sm p-5">
+            <div key={rule.id} className="flex items-center justify-between rounded-2xl bg-slate-900/80 border border-slate-700/50 shadow-lg shadow-black/20 p-5">
               <div className="flex-1">
                 <div className="flex items-center gap-2">
-                  <h3 className="font-medium text-gray-900">{rule.name}</h3>
-                  <span className="rounded bg-gray-100 px-2 py-0.5 text-xs text-gray-500">{rule.tool}</span>
+                  <h3 className="font-medium text-white">{rule.name}</h3>
+                  <span className="rounded bg-slate-800 px-2 py-0.5 text-xs text-slate-400">{rule.tool}</span>
                 </div>
-                <p className="mt-1 text-sm text-gray-500">{rule.description}</p>
+                <p className="mt-1 text-sm text-slate-400">{rule.description}</p>
               </div>
               <button
                 onClick={() => toggleRule(rule.id)}
                 className={`relative ml-4 h-6 w-11 flex-shrink-0 rounded-full transition-colors ${
-                  rule.enabled ? 'bg-blue-600' : 'bg-gray-300'
+                  rule.enabled ? 'bg-blue-600' : 'bg-slate-700'
                 }`}
               >
                 <span

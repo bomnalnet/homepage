@@ -44,19 +44,19 @@ export default function DashboardLayout({
 
   if (loading) {
     return (
-      <div className="flex h-screen items-center justify-center bg-gray-50">
+      <div className="flex h-screen items-center justify-center bg-slate-950">
         <div className="text-center">
-          <div className="mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-xl bg-emerald-500 text-xl font-bold text-white">
+          <div className="mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-xl bg-gradient-to-br from-blue-600 to-blue-400 text-xl font-bold text-white shadow-lg shadow-blue-500/20">
             봄
           </div>
-          <p className="text-sm text-gray-500">로딩 중...</p>
+          <p className="text-sm text-slate-400">로딩 중...</p>
         </div>
       </div>
     );
   }
 
   return (
-    <div className="flex h-screen bg-gray-50">
+    <div className="flex h-screen bg-slate-950">
       <Sidebar
         user={user}
         collapsed={sidebarCollapsed}
@@ -66,7 +66,7 @@ export default function DashboardLayout({
       <div className="flex min-w-0 flex-1 flex-col">
         <Header user={user} notifications={3} />
 
-        <main className="flex-1 overflow-y-auto p-4 lg:p-6">
+        <main className="flex-1 overflow-y-auto p-4 lg:p-6 scrollbar-thin">
           {children}
         </main>
       </div>

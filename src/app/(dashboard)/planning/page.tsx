@@ -28,10 +28,10 @@ const okrs = [
 ];
 
 const initiatives = [
-  { id: 1, title: 'AI 기반 마케팅 자동화', status: '진행 중', owner: '김민수', timeline: '2026 Q2~Q3', color: 'bg-blue-100 text-blue-700' },
-  { id: 2, title: '고객 온보딩 프로세스 개선', status: '완료', owner: '정하늘', timeline: '2026 Q1~Q2', color: 'bg-green-100 text-green-700' },
-  { id: 3, title: '데이터 분석 플랫폼 구축', status: '진행 중', owner: '박진혁', timeline: '2026 Q2~Q4', color: 'bg-blue-100 text-blue-700' },
-  { id: 4, title: '브랜드 리뉴얼 프로젝트', status: '계획', owner: '한서윤', timeline: '2026 Q3~Q4', color: 'bg-gray-100 text-gray-600' },
+  { id: 1, title: 'AI 기반 마케팅 자동화', status: '진행 중', owner: '김민수', timeline: '2026 Q2~Q3', color: 'bg-blue-500/20 text-blue-400' },
+  { id: 2, title: '고객 온보딩 프로세스 개선', status: '완료', owner: '정하늘', timeline: '2026 Q1~Q2', color: 'bg-green-500/20 text-green-400' },
+  { id: 3, title: '데이터 분석 플랫폼 구축', status: '진행 중', owner: '박진혁', timeline: '2026 Q2~Q4', color: 'bg-blue-500/20 text-blue-400' },
+  { id: 4, title: '브랜드 리뉴얼 프로젝트', status: '계획', owner: '한서윤', timeline: '2026 Q3~Q4', color: 'bg-slate-700/50 text-slate-400' },
 ];
 
 const meetings = [
@@ -50,20 +50,20 @@ const kpis = [
 
 export default function PlanningPage() {
   return (
-    <div className="min-h-screen bg-gray-50 p-6 lg:p-8">
+    <div className="p-6 lg:p-8">
       {/* Header */}
       <div className="mb-8">
-        <h1 className="text-2xl font-bold text-gray-900">기획</h1>
-        <p className="mt-1 text-sm text-gray-500">OKR, 전략 이니셔티브, KPI 등 기획 업무를 관리합니다.</p>
+        <h1 className="text-2xl font-bold text-white">기획</h1>
+        <p className="mt-1 text-sm text-slate-400">OKR, 전략 이니셔티브, KPI 등 기획 업무를 관리합니다.</p>
       </div>
 
       {/* KPI 대시보드 */}
       <div className="mb-8 grid grid-cols-2 gap-4 lg:grid-cols-4">
         {kpis.map((kpi) => (
-          <div key={kpi.label} className="rounded-xl bg-white p-5 shadow-sm">
-            <p className="text-sm text-gray-500">{kpi.label}</p>
-            <p className="mt-1 text-2xl font-bold text-gray-900">{kpi.value}</p>
-            <p className={`mt-1 text-sm font-medium ${kpi.positive ? 'text-emerald-600' : 'text-red-500'}`}>
+          <div key={kpi.label} className="rounded-2xl bg-slate-900/80 border border-slate-700/50 p-5 shadow-lg shadow-black/20">
+            <p className="text-sm text-slate-400">{kpi.label}</p>
+            <p className="mt-1 text-2xl font-bold text-white">{kpi.value}</p>
+            <p className={`mt-1 text-sm font-medium ${kpi.positive ? 'text-green-400' : 'text-red-400'}`}>
               {kpi.change}
             </p>
           </div>
@@ -71,13 +71,13 @@ export default function PlanningPage() {
       </div>
 
       {/* OKR 현황 */}
-      <div className="mb-8 rounded-xl bg-white p-6 shadow-sm">
-        <h2 className="mb-6 text-lg font-semibold text-gray-900">OKR 현황</h2>
+      <div className="mb-8 rounded-2xl bg-slate-900/80 border border-slate-700/50 p-6 shadow-lg shadow-black/20">
+        <h2 className="mb-6 text-lg font-semibold text-white">OKR 현황</h2>
         <div className="space-y-8">
           {okrs.map((okr, idx) => (
             <div key={idx}>
-              <h3 className="mb-3 font-medium text-gray-900">
-                <span className="mr-2 inline-flex h-6 w-6 items-center justify-center rounded-full bg-emerald-100 text-xs font-bold text-emerald-700">
+              <h3 className="mb-3 font-medium text-white">
+                <span className="mr-2 inline-flex h-6 w-6 items-center justify-center rounded-full bg-blue-500/20 text-xs font-bold text-blue-400">
                   O{idx + 1}
                 </span>
                 {okr.objective}
@@ -86,13 +86,13 @@ export default function PlanningPage() {
                 {okr.keyResults.map((kr, krIdx) => (
                   <div key={krIdx}>
                     <div className="mb-1 flex items-center justify-between text-sm">
-                      <span className="text-gray-600">{kr.label}</span>
-                      <span className="font-medium text-gray-900">{kr.current} ({kr.progress}%)</span>
+                      <span className="text-slate-400">{kr.label}</span>
+                      <span className="font-medium text-white">{kr.current} ({kr.progress}%)</span>
                     </div>
-                    <div className="h-2 w-full rounded-full bg-gray-100">
+                    <div className="h-2 w-full rounded-full bg-slate-800">
                       <div
                         className={`h-2 rounded-full transition-all ${
-                          kr.progress >= 80 ? 'bg-emerald-500' : kr.progress >= 50 ? 'bg-yellow-400' : 'bg-red-400'
+                          kr.progress >= 80 ? 'bg-green-500' : kr.progress >= 50 ? 'bg-yellow-400' : 'bg-red-400'
                         }`}
                         style={{ width: `${kr.progress}%` }}
                       />
@@ -107,33 +107,33 @@ export default function PlanningPage() {
 
       {/* 전략 이니셔티브 */}
       <div className="mb-8">
-        <h2 className="mb-4 text-lg font-semibold text-gray-900">전략 이니셔티브</h2>
+        <h2 className="mb-4 text-lg font-semibold text-slate-100">전략 이니셔티브</h2>
         <div className="grid gap-4 sm:grid-cols-2">
           {initiatives.map((item) => (
-            <div key={item.id} className="rounded-xl bg-white p-6 shadow-sm">
+            <div key={item.id} className="rounded-2xl bg-slate-900/80 border border-slate-700/50 p-6 shadow-lg shadow-black/20">
               <div className="mb-3 flex items-center justify-between">
                 <span className={`rounded-full px-3 py-1 text-xs font-medium ${item.color}`}>{item.status}</span>
-                <span className="text-sm text-gray-400">{item.timeline}</span>
+                <span className="text-sm text-slate-500">{item.timeline}</span>
               </div>
-              <h3 className="font-medium text-gray-900">{item.title}</h3>
-              <p className="mt-1 text-sm text-gray-500">담당: {item.owner}</p>
+              <h3 className="font-medium text-white">{item.title}</h3>
+              <p className="mt-1 text-sm text-slate-400">담당: {item.owner}</p>
             </div>
           ))}
         </div>
       </div>
 
       {/* 회의록 */}
-      <div className="rounded-xl bg-white p-6 shadow-sm">
-        <h2 className="mb-4 text-lg font-semibold text-gray-900">최근 회의록</h2>
-        <div className="divide-y divide-gray-100">
+      <div className="rounded-2xl bg-slate-900/80 border border-slate-700/50 p-6 shadow-lg shadow-black/20">
+        <h2 className="mb-4 text-lg font-semibold text-white">최근 회의록</h2>
+        <div className="divide-y divide-slate-700/50">
           {meetings.map((m) => (
             <div key={m.id} className="py-4 first:pt-0 last:pb-0">
               <div className="flex items-center justify-between">
-                <h3 className="font-medium text-gray-900">{m.title}</h3>
-                <span className="text-sm text-gray-400">{m.date}</span>
+                <h3 className="font-medium text-white">{m.title}</h3>
+                <span className="text-sm text-slate-500">{m.date}</span>
               </div>
-              <p className="mt-1 text-sm text-gray-500">{m.participants}</p>
-              <p className="mt-1 text-sm text-gray-600">{m.summary}</p>
+              <p className="mt-1 text-sm text-slate-400">{m.participants}</p>
+              <p className="mt-1 text-sm text-slate-300">{m.summary}</p>
             </div>
           ))}
         </div>

@@ -52,7 +52,7 @@ export default function Sidebar({ user, collapsed, onToggle }: SidebarProps) {
       {/* Mobile overlay */}
       {!collapsed && (
         <div
-          className="fixed inset-0 z-40 bg-black/50 lg:hidden"
+          className="fixed inset-0 z-40 bg-black/60 backdrop-blur-sm lg:hidden"
           onClick={onToggle}
         />
       )}
@@ -60,7 +60,7 @@ export default function Sidebar({ user, collapsed, onToggle }: SidebarProps) {
       {/* Hamburger button for mobile */}
       <button
         onClick={onToggle}
-        className="fixed left-4 top-4 z-50 rounded-md bg-slate-900 p-2 text-white lg:hidden"
+        className="fixed left-4 top-4 z-50 rounded-lg bg-slate-800 p-2 text-white shadow-lg shadow-black/20 lg:hidden"
         aria-label="메뉴 토글"
       >
         {collapsed ? '☰' : '✕'}
@@ -69,7 +69,7 @@ export default function Sidebar({ user, collapsed, onToggle }: SidebarProps) {
       {/* Sidebar */}
       <aside
         className={`
-          fixed left-0 top-0 z-40 flex h-full w-64 flex-col bg-slate-900 text-white
+          fixed left-0 top-0 z-40 flex h-full w-64 flex-col bg-[#0a0f1e] border-r border-slate-800 text-white
           transition-transform duration-300 ease-in-out
           ${collapsed ? '-translate-x-full' : 'translate-x-0'}
           lg:relative lg:z-auto lg:translate-x-0
@@ -77,25 +77,25 @@ export default function Sidebar({ user, collapsed, onToggle }: SidebarProps) {
         `}
       >
         {/* Logo */}
-        <div className="flex h-16 shrink-0 items-center gap-3 border-b border-slate-700 px-6">
-          <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-emerald-500 text-lg font-bold">
+        <div className="flex h-16 shrink-0 items-center gap-3 border-b border-slate-800 px-6">
+          <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-gradient-to-br from-blue-600 to-blue-400 text-lg font-bold shadow-lg shadow-blue-500/20">
             봄
           </div>
           <div>
-            <h1 className="text-lg font-bold tracking-tight">봄날</h1>
-            <p className="text-[10px] text-slate-400">인트라넷 시스템</p>
+            <h1 className="text-lg font-bold tracking-tight text-white">봄날</h1>
+            <p className="text-[10px] text-slate-500">인트라넷 시스템</p>
           </div>
         </div>
 
         {/* User profile summary */}
         {user && (
-          <div className="border-b border-slate-700 px-4 py-4">
-            <div className="flex items-center gap-3">
-              <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-emerald-600 text-sm font-semibold">
+          <div className="border-b border-slate-800 px-4 py-4">
+            <div className="flex items-center gap-3 rounded-xl bg-slate-800/50 px-3 py-2.5">
+              <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-blue-600 to-blue-400 text-sm font-semibold">
                 {getUserInitials(user.name)}
               </div>
               <div className="min-w-0">
-                <p className="truncate text-sm font-medium">{user.name}</p>
+                <p className="truncate text-sm font-medium text-white">{user.name}</p>
                 <p className="truncate text-xs text-slate-400">{user.department}</p>
               </div>
             </div>
@@ -103,25 +103,25 @@ export default function Sidebar({ user, collapsed, onToggle }: SidebarProps) {
         )}
 
         {/* Navigation */}
-        <nav className="flex-1 overflow-y-auto px-3 py-4">
+        <nav className="scrollbar-thin flex-1 overflow-y-auto px-3 py-4">
           <ul className="space-y-1">
             {navItems.map((item) => (
               <li key={item.href}>
                 <Link
                   href={item.href}
                   className={`
-                    flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm transition-colors
+                    flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm transition-all
                     ${
                       isActive(item.href)
-                        ? 'bg-emerald-600/20 text-emerald-400 font-medium'
-                        : 'text-slate-300 hover:bg-slate-800 hover:text-white'
+                        ? 'bg-blue-600/20 text-blue-400 font-medium border-l-2 border-blue-500'
+                        : 'text-slate-400 hover:bg-slate-800/60 hover:text-white border-l-2 border-transparent'
                     }
                   `}
                 >
                   <span className="text-base">{item.icon}</span>
                   <span>{item.label}</span>
                   {isActive(item.href) && (
-                    <span className="ml-auto h-2 w-2 rounded-full bg-emerald-400" />
+                    <span className="ml-auto h-2 w-2 rounded-full bg-blue-400" />
                   )}
                 </Link>
               </li>
@@ -130,7 +130,7 @@ export default function Sidebar({ user, collapsed, onToggle }: SidebarProps) {
 
           {/* Admin section */}
           {user?.role === 'admin' && (
-            <div className="mt-6 border-t border-slate-700 pt-4">
+            <div className="mt-6 border-t border-slate-800 pt-4">
               <p className="mb-2 px-3 text-[11px] font-semibold uppercase tracking-wider text-slate-500">
                 관리자 메뉴
               </p>
@@ -140,11 +140,11 @@ export default function Sidebar({ user, collapsed, onToggle }: SidebarProps) {
                     <Link
                       href={item.href}
                       className={`
-                        flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm transition-colors
+                        flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm transition-all
                         ${
                           isActive(item.href)
-                            ? 'bg-emerald-600/20 text-emerald-400 font-medium'
-                            : 'text-slate-300 hover:bg-slate-800 hover:text-white'
+                            ? 'bg-blue-600/20 text-blue-400 font-medium border-l-2 border-blue-500'
+                            : 'text-slate-400 hover:bg-slate-800/60 hover:text-white border-l-2 border-transparent'
                         }
                       `}
                     >
@@ -159,8 +159,8 @@ export default function Sidebar({ user, collapsed, onToggle }: SidebarProps) {
         </nav>
 
         {/* Footer */}
-        <div className="shrink-0 border-t border-slate-700 px-4 py-3">
-          <p className="text-center text-[10px] text-slate-500">
+        <div className="shrink-0 border-t border-slate-800 px-4 py-3">
+          <p className="text-center text-[10px] text-slate-600">
             &copy; 2026 봄날 시너지
           </p>
         </div>

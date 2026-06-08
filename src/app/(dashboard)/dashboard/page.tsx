@@ -1,9 +1,11 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import type { User, Task, Schedule, QuickLink, Integration, Directive } from '@/types';
+import type { User, Task, Schedule, QuickLink, Directive } from '@/types';
+import { useTaskStore } from '@/store/taskStore';
+import AddTaskModal from '@/components/tasks/AddTaskModal';
+import EditTaskModal from '@/components/tasks/EditTaskModal';
 import {
-  tasks,
   schedules,
   quickLinks,
   integrations,
@@ -28,10 +30,10 @@ const statusLabel: Record<Task['status'], string> = {
 };
 
 const statusColor: Record<Task['status'], string> = {
-  todo: 'bg-gray-100 text-gray-600',
-  'in-progress': 'bg-blue-100 text-blue-700',
-  review: 'bg-yellow-100 text-yellow-700',
-  done: 'bg-green-100 text-green-700',
+  todo: 'bg-slate-500/20 text-slate-300',
+  'in-progress': 'bg-blue-500/20 text-blue-400',
+  review: 'bg-yellow-500/20 text-yellow-400',
+  done: 'bg-green-500/20 text-green-400',
 };
 
 const scheduleTypeIcon: Record<Schedule['type'], string> = {
@@ -49,17 +51,17 @@ const scheduleTypeLabel: Record<Schedule['type'], string> = {
 };
 
 const scheduleTypeColor: Record<Schedule['type'], string> = {
-  meeting: 'border-blue-400 bg-blue-50',
-  deadline: 'border-red-400 bg-red-50',
-  reminder: 'border-yellow-400 bg-yellow-50',
-  event: 'border-emerald-400 bg-emerald-50',
+  meeting: 'border-blue-500/30 bg-blue-500/10',
+  deadline: 'border-red-500/30 bg-red-500/10',
+  reminder: 'border-yellow-500/30 bg-yellow-500/10',
+  event: 'border-emerald-500/30 bg-emerald-500/10',
 };
 
 const scheduleTypeBadge: Record<Schedule['type'], string> = {
-  meeting: 'bg-blue-100 text-blue-700',
-  deadline: 'bg-red-100 text-red-700',
-  reminder: 'bg-yellow-100 text-yellow-700',
-  event: 'bg-emerald-100 text-emerald-700',
+  meeting: 'bg-blue-500/20 text-blue-400',
+  deadline: 'bg-red-500/20 text-red-400',
+  reminder: 'bg-yellow-500/20 text-yellow-400',
+  event: 'bg-emerald-500/20 text-emerald-400',
 };
 
 const directiveStatusLabel: Record<Directive['status'], string> = {
@@ -69,9 +71,9 @@ const directiveStatusLabel: Record<Directive['status'], string> = {
 };
 
 const directiveStatusColor: Record<Directive['status'], string> = {
-  pending: 'bg-yellow-100 text-yellow-700',
-  acknowledged: 'bg-blue-100 text-blue-700',
-  completed: 'bg-green-100 text-green-700',
+  pending: 'bg-yellow-500/20 text-yellow-400',
+  acknowledged: 'bg-blue-500/20 text-blue-400',
+  completed: 'bg-green-500/20 text-green-400',
 };
 
 function progressBarColor(pct: number): string {
@@ -90,10 +92,15 @@ function formatTime(iso: string): string {
 // ---------------------------------------------------------------------------
 
 export default function DashboardPage() {
+  const tasks = useTaskStore((state) => state.tasks);
+  const updateTaskStatus = useTaskStore((state) => state.updateTaskStatus);
+
   const [currentUser, setCurrentUser] = useState<User | null>(null);
   const [expandedTask, setExpandedTask] = useState<string | null>(null);
   const [collapsedSections, setCollapsedSections] = useState<Record<string, boolean>>({});
   const [userQuickLinks, setUserQuickLinks] = useState<QuickLink[]>([]);
+  const [showAddModal, setShowAddModal] = useState(false);
+  const [editingTask, setEditingTask] = useState<Task | null>(null);
 
   const toggleSection = (section: string) => {
     setCollapsedSections((prev) => ({ ...prev, [section]: !prev[section] }));
@@ -120,7 +127,7 @@ export default function DashboardPage() {
 
   const isAdmin = currentUser.role === 'admin';
 
-  // Task data - admin sees all, regular user sees all for demo
+  // Task data from store
   const myTasks: Task[] = isAdmin ? tasks : tasks;
   const todoAndInProgress = myTasks.filter(
     (t) => t.status === 'todo' || t.status === 'in-progress',
@@ -139,9 +146,9 @@ export default function DashboardPage() {
         .sort((a, b) => new Date(a.startTime).getTime() - new Date(b.startTime).getTime());
 
   return (
-    <div className="min-h-screen bg-gray-50 space-y-6 p-4 md:p-6 lg:p-8">
+    <div className="min-h-screen bg-slate-950 space-y-6 p-4 md:p-6 lg:p-8">
       {/* ── A) Welcome Banner ───────────────────────────────── */}
-      <section className="rounded-2xl bg-gradient-to-br from-emerald-600 via-emerald-500 to-teal-400 p-6 md:p-8 text-white shadow-lg relative overflow-hidden">
+      <section className="rounded-2xl bg-gradient-to-br from-blue-600 via-blue-500 to-cyan-500 p-6 md:p-8 text-white shadow-lg relative overflow-hidden">
         <div className="absolute top-0 right-0 w-64 h-64 bg-white/5 rounded-full -translate-y-1/2 translate-x-1/3" />
         <div className="absolute bottom-0 left-0 w-48 h-48 bg-white/5 rounded-full translate-y-1/3 -translate-x-1/4" />
         <div className="relative z-10">
@@ -170,29 +177,29 @@ export default function DashboardPage() {
       {/* ── B) Stats Overview Cards ─────────────────────────── */}
       <section className="grid grid-cols-2 gap-4 md:grid-cols-4">
         {/* 오늘의 할일 - blue */}
-        <div className="rounded-xl border border-blue-100 bg-white p-5 shadow-sm">
+        <div className="rounded-2xl border border-blue-500/30 bg-slate-900/80 p-5 shadow-sm">
           <div className="flex items-center justify-between">
-            <p className="text-sm font-medium text-blue-600">오늘의 할일</p>
-            <span className="flex h-8 w-8 items-center justify-center rounded-lg bg-blue-50 text-lg">
+            <p className="text-sm font-medium text-blue-400">오늘의 할일</p>
+            <span className="flex h-8 w-8 items-center justify-center rounded-lg bg-blue-500/20 text-lg">
               📋
             </span>
           </div>
-          <p className="mt-2 text-3xl font-bold text-blue-700">{todoAndInProgress.length}</p>
+          <p className="mt-2 text-3xl font-bold text-white">{todoAndInProgress.length}</p>
           <div className="mt-2 flex items-center gap-1">
-            <span className="text-xs text-blue-500">▲ 2</span>
-            <span className="text-xs text-gray-400">어제 대비</span>
+            <span className="text-xs text-blue-400">▲ 2</span>
+            <span className="text-xs text-slate-400">어제 대비</span>
           </div>
         </div>
 
         {/* 긴급 업무 - red */}
-        <div className="rounded-xl border border-red-100 bg-white p-5 shadow-sm">
+        <div className="rounded-2xl border border-red-500/30 bg-slate-900/80 p-5 shadow-sm">
           <div className="flex items-center justify-between">
-            <p className="text-sm font-medium text-red-600">긴급 업무</p>
-            <span className="flex h-8 w-8 items-center justify-center rounded-lg bg-red-50 text-lg">
+            <p className="text-sm font-medium text-red-400">긴급 업무</p>
+            <span className="flex h-8 w-8 items-center justify-center rounded-lg bg-red-500/20 text-lg">
               🔥
             </span>
           </div>
-          <p className="mt-2 text-3xl font-bold text-red-700">{urgentTasks.length}</p>
+          <p className="mt-2 text-3xl font-bold text-white">{urgentTasks.length}</p>
           <div className="mt-2 flex items-center gap-1">
             <span className="inline-block h-2 w-2 rounded-full bg-red-500 animate-pulse" />
             <span className="text-xs text-red-400">즉시 처리 필요</span>
@@ -200,16 +207,16 @@ export default function DashboardPage() {
         </div>
 
         {/* 진행중 - amber */}
-        <div className="rounded-xl border border-amber-100 bg-white p-5 shadow-sm">
+        <div className="rounded-2xl border border-amber-500/30 bg-slate-900/80 p-5 shadow-sm">
           <div className="flex items-center justify-between">
-            <p className="text-sm font-medium text-amber-600">진행중</p>
-            <span className="flex h-8 w-8 items-center justify-center rounded-lg bg-amber-50 text-lg">
+            <p className="text-sm font-medium text-amber-400">진행중</p>
+            <span className="flex h-8 w-8 items-center justify-center rounded-lg bg-amber-500/20 text-lg">
               ⚡
             </span>
           </div>
-          <p className="mt-2 text-3xl font-bold text-amber-700">{inProgressTasks.length}</p>
+          <p className="mt-2 text-3xl font-bold text-white">{inProgressTasks.length}</p>
           <div className="mt-2 flex items-center gap-1">
-            <span className="text-xs text-amber-500">
+            <span className="text-xs text-amber-400">
               평균{' '}
               {inProgressTasks.length
                 ? Math.round(
@@ -218,22 +225,22 @@ export default function DashboardPage() {
                 : 0}
               %
             </span>
-            <span className="text-xs text-gray-400">진행률</span>
+            <span className="text-xs text-slate-400">진행률</span>
           </div>
         </div>
 
         {/* 완료 - green */}
-        <div className="rounded-xl border border-green-100 bg-white p-5 shadow-sm">
+        <div className="rounded-2xl border border-green-500/30 bg-slate-900/80 p-5 shadow-sm">
           <div className="flex items-center justify-between">
-            <p className="text-sm font-medium text-green-600">완료</p>
-            <span className="flex h-8 w-8 items-center justify-center rounded-lg bg-green-50 text-lg">
+            <p className="text-sm font-medium text-green-400">완료</p>
+            <span className="flex h-8 w-8 items-center justify-center rounded-lg bg-green-500/20 text-lg">
               ✅
             </span>
           </div>
-          <p className="mt-2 text-3xl font-bold text-green-700">{doneTasks.length}</p>
+          <p className="mt-2 text-3xl font-bold text-white">{doneTasks.length}</p>
           <div className="mt-2 flex items-center gap-1">
-            <span className="text-xs text-green-500">▲</span>
-            <span className="text-xs text-gray-400">
+            <span className="text-xs text-green-400">▲</span>
+            <span className="text-xs text-slate-400">
               전체의 {myTasks.length ? Math.round((doneTasks.length / myTasks.length) * 100) : 0}%
               완료
             </span>
@@ -244,14 +251,23 @@ export default function DashboardPage() {
       {/* ── C) 오늘의 업무 ──────────────────────────────────── */}
       <section>
         <div className="flex items-center justify-between mb-4">
-          <h2 className="text-lg font-bold text-gray-900">오늘의 업무</h2>
-          <button
-            type="button"
-            onClick={() => toggleSection('tasks')}
-            className="text-xs text-gray-400 hover:text-gray-600 transition-colors"
-          >
-            {collapsedSections.tasks ? '펼치기 ▼' : '접기 ▲'}
-          </button>
+          <h2 className="text-lg font-bold text-white">오늘의 업무</h2>
+          <div className="flex items-center gap-3">
+            <button
+              type="button"
+              onClick={() => setShowAddModal(true)}
+              className="rounded-lg bg-blue-600 px-3 py-1.5 text-xs font-medium text-white hover:bg-blue-500 transition-colors"
+            >
+              + 새 업무
+            </button>
+            <button
+              type="button"
+              onClick={() => toggleSection('tasks')}
+              className="text-xs text-slate-400 hover:text-slate-200 transition-colors"
+            >
+              {collapsedSections.tasks ? '펼치기 ▼' : '접기 ▲'}
+            </button>
+          </div>
         </div>
         {!collapsedSections.tasks && (
           <div className="space-y-3">
@@ -260,7 +276,7 @@ export default function DashboardPage() {
               return (
                 <div
                   key={task.id}
-                  className="rounded-xl border border-gray-100 bg-white shadow-sm transition-shadow hover:shadow-md"
+                  className="rounded-2xl border border-slate-700/50 bg-slate-900/80 shadow-sm transition-all hover:border-slate-600"
                 >
                   <button
                     type="button"
@@ -270,43 +286,43 @@ export default function DashboardPage() {
                     <div className="flex flex-wrap items-start justify-between gap-2">
                       <div className="min-w-0 flex-1">
                         <div className="flex items-center gap-2">
-                          <h3 className="text-sm font-bold text-gray-900 truncate">{task.title}</h3>
+                          <h3 className="text-sm font-bold text-white truncate">{task.title}</h3>
                           <span
                             className={`shrink-0 rounded-full px-2 py-0.5 text-[10px] font-semibold ${statusColor[task.status]}`}
                           >
                             {statusLabel[task.status]}
                           </span>
                           {task.aiAssisted && (
-                            <span className="shrink-0 rounded-full bg-purple-100 px-2 py-0.5 text-[10px] font-bold text-purple-700">
+                            <span className="shrink-0 rounded-full bg-purple-500/20 px-2 py-0.5 text-[10px] font-bold text-purple-400">
                               AI
                             </span>
                           )}
                         </div>
-                        <p className="mt-1 text-xs text-gray-400 line-clamp-1">
+                        <p className="mt-1 text-xs text-slate-400 line-clamp-1">
                           {task.description}
                         </p>
                       </div>
-                      <p className="shrink-0 text-xs text-gray-400">마감 {task.dueDate}</p>
+                      <p className="shrink-0 text-xs text-slate-400">마감 {task.dueDate}</p>
                     </div>
 
                     {/* 4 colored badges */}
                     <div className="mt-3 flex flex-wrap gap-2">
-                      <span className="rounded-md bg-purple-100 px-2 py-0.5 text-[10px] font-semibold text-purple-700">
+                      <span className="rounded-md bg-purple-500/20 px-2 py-0.5 text-[10px] font-semibold text-purple-400">
                         중요도 {task.priority}
                       </span>
-                      <span className="rounded-md bg-red-100 px-2 py-0.5 text-[10px] font-semibold text-red-700">
+                      <span className="rounded-md bg-red-500/20 px-2 py-0.5 text-[10px] font-semibold text-red-400">
                         긴급도 {task.urgency}
                       </span>
-                      <span className="rounded-md bg-orange-100 px-2 py-0.5 text-[10px] font-semibold text-orange-700">
+                      <span className="rounded-md bg-orange-500/20 px-2 py-0.5 text-[10px] font-semibold text-orange-400">
                         위험도 {task.risk}
                       </span>
-                      <span className="rounded-md bg-blue-100 px-2 py-0.5 text-[10px] font-semibold text-blue-700">
+                      <span className="rounded-md bg-blue-500/20 px-2 py-0.5 text-[10px] font-semibold text-blue-400">
                         진행도 {task.progress}%
                       </span>
                     </div>
 
                     {/* Progress bar */}
-                    <div className="mt-3 h-1.5 w-full overflow-hidden rounded-full bg-gray-100">
+                    <div className="mt-3 h-1.5 w-full overflow-hidden rounded-full bg-slate-800">
                       <div
                         className={`h-full rounded-full transition-all ${progressBarColor(task.progress)}`}
                         style={{ width: `${task.progress}%` }}
@@ -316,13 +332,13 @@ export default function DashboardPage() {
 
                   {/* Expanded details */}
                   {isExpanded && (
-                    <div className="border-t border-gray-100 px-5 py-4 space-y-3">
-                      <p className="text-sm text-gray-600">{task.description}</p>
+                    <div className="border-t border-slate-700/50 px-5 py-4 space-y-3">
+                      <p className="text-sm text-slate-300">{task.description}</p>
 
                       {/* Related links */}
                       {task.relatedLinks.length > 0 && (
                         <div>
-                          <p className="text-xs font-medium text-gray-500 mb-1">관련 링크</p>
+                          <p className="text-xs font-medium text-slate-400 mb-1">관련 링크</p>
                           <div className="flex flex-wrap gap-2">
                             {task.relatedLinks.map((link) => (
                               <a
@@ -330,7 +346,7 @@ export default function DashboardPage() {
                                 href={link.url}
                                 target="_blank"
                                 rel="noopener noreferrer"
-                                className="inline-flex items-center gap-1 rounded-lg border border-gray-200 px-2.5 py-1 text-xs text-gray-600 hover:bg-gray-50 transition-colors"
+                                className="inline-flex items-center gap-1 rounded-lg border border-slate-700 px-2.5 py-1 text-xs text-slate-300 hover:bg-slate-800 transition-colors"
                               >
                                 <span>{link.icon}</span>
                                 {link.title}
@@ -344,23 +360,27 @@ export default function DashboardPage() {
                       <div className="flex flex-wrap gap-2 pt-1">
                         <button
                           type="button"
-                          className="rounded-lg bg-purple-100 px-3 py-1.5 text-xs font-medium text-purple-700 hover:bg-purple-200 transition-colors"
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            setEditingTask(task);
+                          }}
+                          className="rounded-lg bg-blue-500/20 px-3 py-1.5 text-xs font-medium text-blue-400 hover:bg-blue-500/30 transition-colors"
+                        >
+                          ✏️ 편집
+                        </button>
+                        <button
+                          type="button"
+                          className="rounded-lg bg-purple-500/20 px-3 py-1.5 text-xs font-medium text-purple-400 hover:bg-purple-500/30 transition-colors"
                         >
                           🤖 AI 전달
                         </button>
-                        {task.relatedLinks.length > 0 && (
-                          <a
-                            href={task.relatedLinks[0].url}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="rounded-lg bg-blue-100 px-3 py-1.5 text-xs font-medium text-blue-700 hover:bg-blue-200 transition-colors"
-                          >
-                            🔗 링크 보기
-                          </a>
-                        )}
                         <button
                           type="button"
-                          className="rounded-lg bg-green-100 px-3 py-1.5 text-xs font-medium text-green-700 hover:bg-green-200 transition-colors"
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            updateTaskStatus(task.id, 'done');
+                          }}
+                          className="rounded-lg bg-green-500/20 px-3 py-1.5 text-xs font-medium text-green-400 hover:bg-green-500/30 transition-colors"
                         >
                           ✓ 완료
                         </button>
@@ -377,11 +397,11 @@ export default function DashboardPage() {
       {/* ── D) 오늘의 일정 ──────────────────────────────────── */}
       <section>
         <div className="flex items-center justify-between mb-4">
-          <h2 className="text-lg font-bold text-gray-900">오늘의 일정</h2>
+          <h2 className="text-lg font-bold text-white">오늘의 일정</h2>
           <button
             type="button"
             onClick={() => toggleSection('schedules')}
-            className="text-xs text-gray-400 hover:text-gray-600 transition-colors"
+            className="text-xs text-slate-400 hover:text-slate-200 transition-colors"
           >
             {collapsedSections.schedules ? '펼치기 ▼' : '접기 ▲'}
           </button>
@@ -389,12 +409,12 @@ export default function DashboardPage() {
         {!collapsedSections.schedules && (
           <div className="relative space-y-3 pl-6">
             {/* Timeline line */}
-            <div className="absolute left-2.5 top-2 bottom-2 w-px bg-gray-200" />
+            <div className="absolute left-2.5 top-2 bottom-2 w-px bg-slate-800" />
 
             {mySchedules.map((sched) => (
               <div key={sched.id} className="relative flex items-start gap-3">
                 {/* Dot */}
-                <div className="absolute -left-6 top-3 z-10 h-2.5 w-2.5 rounded-full bg-emerald-500 ring-2 ring-white" />
+                <div className="absolute -left-6 top-3 z-10 h-2.5 w-2.5 rounded-full bg-blue-500 ring-2 ring-slate-950" />
 
                 <div
                   className={`flex-1 rounded-xl border-l-4 p-4 ${scheduleTypeColor[sched.type]}`}
@@ -402,7 +422,7 @@ export default function DashboardPage() {
                   <div className="flex items-center justify-between gap-2">
                     <div className="flex items-center gap-2 min-w-0">
                       <span className="text-base">{scheduleTypeIcon[sched.type]}</span>
-                      <h3 className="text-sm font-semibold text-gray-900 truncate">
+                      <h3 className="text-sm font-semibold text-white truncate">
                         {sched.title}
                       </h3>
                       <span
@@ -411,13 +431,13 @@ export default function DashboardPage() {
                         {scheduleTypeLabel[sched.type]}
                       </span>
                     </div>
-                    <span className="shrink-0 text-xs font-medium text-gray-500">
+                    <span className="shrink-0 text-xs font-medium text-slate-400">
                       {formatTime(sched.startTime)}
                       {sched.startTime !== sched.endTime && ` - ${formatTime(sched.endTime)}`}
                     </span>
                   </div>
                   <div className="mt-2 flex items-center gap-2">
-                    <span className="text-[10px] text-gray-500">
+                    <span className="text-[10px] text-slate-400">
                       참여자 {sched.participants.length}명
                     </span>
                     <div className="flex -space-x-1">
@@ -426,7 +446,7 @@ export default function DashboardPage() {
                         return u ? (
                           <span
                             key={pid}
-                            className="inline-flex h-5 w-5 items-center justify-center rounded-full bg-gradient-to-br from-emerald-400 to-teal-500 text-[8px] font-bold text-white ring-1 ring-white"
+                            className="inline-flex h-5 w-5 items-center justify-center rounded-full bg-gradient-to-br from-blue-500 to-cyan-500 text-[8px] font-bold text-white ring-1 ring-slate-900"
                             title={u.name}
                           >
                             {u.name.charAt(0)}
@@ -434,7 +454,7 @@ export default function DashboardPage() {
                         ) : null;
                       })}
                       {sched.participants.length > 4 && (
-                        <span className="inline-flex h-5 w-5 items-center justify-center rounded-full bg-gray-200 text-[8px] font-bold text-gray-500 ring-1 ring-white">
+                        <span className="inline-flex h-5 w-5 items-center justify-center rounded-full bg-slate-700 text-[8px] font-bold text-slate-300 ring-1 ring-slate-900">
                           +{sched.participants.length - 4}
                         </span>
                       )}
@@ -449,16 +469,16 @@ export default function DashboardPage() {
 
       {/* ── E) 연동 서비스 ──────────────────────────────────── */}
       <section>
-        <h2 className="mb-4 text-lg font-bold text-gray-900">연동 서비스</h2>
+        <h2 className="mb-4 text-lg font-bold text-white">연동 서비스</h2>
         <div className="flex gap-3 overflow-x-auto pb-2">
           {integrations.map((integ) => (
             <div
               key={integ.id}
-              className="flex shrink-0 items-center gap-3 rounded-xl border border-gray-100 bg-white px-4 py-3 shadow-sm"
+              className="flex shrink-0 items-center gap-3 rounded-2xl border border-slate-700/50 bg-slate-900/80 px-4 py-3 shadow-sm"
             >
               <span className="text-xl">{integ.icon}</span>
               <div className="min-w-0">
-                <p className="text-xs font-semibold text-gray-900 whitespace-nowrap">
+                <p className="text-xs font-semibold text-white whitespace-nowrap">
                   {integ.name}
                 </p>
                 <div className="mt-0.5 flex items-center gap-1">
@@ -467,7 +487,7 @@ export default function DashboardPage() {
                       integ.status === 'connected' ? 'bg-green-500' : 'bg-red-400'
                     }`}
                   />
-                  <span className="text-[10px] text-gray-500">
+                  <span className="text-[10px] text-slate-400">
                     {integ.status === 'connected' ? '연결됨' : '미연결'}
                   </span>
                 </div>
@@ -479,7 +499,7 @@ export default function DashboardPage() {
 
       {/* ── F) 빠른 바로가기 ────────────────────────────────── */}
       <section>
-        <h2 className="mb-4 text-lg font-bold text-gray-900">빠른 바로가기</h2>
+        <h2 className="mb-4 text-lg font-bold text-white">빠른 바로가기</h2>
         <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-4">
           {userQuickLinks.map((link) => (
             <a
@@ -487,14 +507,14 @@ export default function DashboardPage() {
               href={link.url}
               target="_blank"
               rel="noopener noreferrer"
-              className="flex items-center gap-3 rounded-xl border border-gray-100 bg-white p-4 shadow-sm transition-all hover:shadow-md hover:-translate-y-0.5"
+              className="flex items-center gap-3 rounded-2xl border border-slate-700/50 bg-slate-900/80 p-4 shadow-sm transition-all hover:border-blue-500/50 hover:-translate-y-0.5"
             >
-              <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-gray-50 text-lg">
+              <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-slate-800 text-lg">
                 {link.icon}
               </span>
               <div className="min-w-0">
-                <p className="text-sm font-semibold text-gray-900 truncate">{link.title}</p>
-                <p className="text-[10px] text-gray-400">{link.category}</p>
+                <p className="text-sm font-semibold text-white truncate">{link.title}</p>
+                <p className="text-[10px] text-slate-400">{link.category}</p>
               </div>
             </a>
           ))}
@@ -502,9 +522,9 @@ export default function DashboardPage() {
           {/* + 바로가기 추가 */}
           <button
             type="button"
-            className="flex items-center gap-3 rounded-xl border-2 border-dashed border-gray-200 bg-white p-4 text-gray-400 transition-colors hover:border-emerald-300 hover:text-emerald-500"
+            className="flex items-center gap-3 rounded-2xl border-2 border-dashed border-slate-700 bg-slate-900/80 p-4 text-slate-400 transition-colors hover:border-blue-500/50 hover:text-blue-400"
           >
-            <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-gray-50 text-xl font-bold">
+            <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-slate-800 text-xl font-bold">
               +
             </span>
             <p className="text-sm font-medium">바로가기 추가</p>
@@ -515,11 +535,11 @@ export default function DashboardPage() {
       {/* ── G) 팀 현황 (Admin only) ─────────────────────────── */}
       {isAdmin && (
         <section>
-          <h2 className="mb-4 text-lg font-bold text-gray-900">팀 현황</h2>
-          <div className="rounded-xl border border-gray-100 bg-white shadow-sm">
-            <div className="divide-y divide-gray-100">
+          <h2 className="mb-4 text-lg font-bold text-white">팀 현황</h2>
+          <div className="rounded-2xl border border-slate-700/50 bg-slate-900/80 shadow-sm">
+            <div className="divide-y divide-slate-700/50">
               {users.map((member) => {
-                const memberTasks = getTasksByAssignee(member.id);
+                const memberTasks = tasks.filter((t) => t.assigneeId === member.id);
                 const memberTotal = memberTasks.length;
                 const avgProgress = memberTotal
                   ? Math.round(memberTasks.reduce((s, t) => s + t.progress, 0) / memberTotal)
@@ -528,31 +548,31 @@ export default function DashboardPage() {
                 return (
                   <div key={member.id} className="flex items-center gap-4 px-5 py-4">
                     {/* Avatar */}
-                    <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-emerald-500 to-teal-500 text-xs font-bold text-white">
+                    <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-blue-500 to-cyan-500 text-xs font-bold text-white">
                       {member.name.charAt(0)}
                     </div>
 
                     <div className="min-w-0 flex-1">
                       <div className="flex items-center gap-2">
-                        <p className="text-sm font-semibold text-gray-900">{member.name}</p>
-                        <span className="text-[10px] text-gray-400">
+                        <p className="text-sm font-semibold text-white">{member.name}</p>
+                        <span className="text-[10px] text-slate-400">
                           {member.department} &middot; {member.position}
                         </span>
                       </div>
 
                       <div className="mt-1.5 flex items-center gap-3">
-                        <div className="h-1.5 flex-1 overflow-hidden rounded-full bg-gray-100">
+                        <div className="h-1.5 flex-1 overflow-hidden rounded-full bg-slate-800">
                           <div
                             className={`h-full rounded-full transition-all ${progressBarColor(avgProgress)}`}
                             style={{ width: `${avgProgress}%` }}
                           />
                         </div>
-                        <span className="shrink-0 text-xs text-gray-500">평균 {avgProgress}%</span>
+                        <span className="shrink-0 text-xs text-slate-400">평균 {avgProgress}%</span>
                       </div>
                     </div>
 
                     <div className="shrink-0 text-right">
-                      <p className="text-xs text-gray-500">업무 {memberTotal}건</p>
+                      <p className="text-xs text-slate-400">업무 {memberTotal}건</p>
                     </div>
                   </div>
                 );
@@ -561,7 +581,7 @@ export default function DashboardPage() {
           </div>
 
           {/* 지시사항 */}
-          <h2 className="mt-6 mb-4 text-lg font-bold text-gray-900">지시사항</h2>
+          <h2 className="mt-6 mb-4 text-lg font-bold text-white">지시사항</h2>
           <div className="space-y-3">
             {directives.map((dir) => {
               const from = getUserById(dir.fromUserId);
@@ -569,12 +589,12 @@ export default function DashboardPage() {
               return (
                 <div
                   key={dir.id}
-                  className="rounded-xl border border-gray-100 bg-white p-5 shadow-sm"
+                  className="rounded-2xl border border-slate-700/50 bg-slate-900/80 p-5 shadow-sm"
                 >
                   <div className="flex items-start justify-between gap-3">
                     <div className="min-w-0 flex-1">
                       <div className="flex items-center gap-2 mb-2">
-                        <span className="text-xs font-semibold text-gray-700">
+                        <span className="text-xs font-semibold text-slate-300">
                           {from?.name ?? '알 수 없음'} → {to?.name ?? '알 수 없음'}
                         </span>
                         <span
@@ -583,15 +603,15 @@ export default function DashboardPage() {
                           {directiveStatusLabel[dir.status]}
                         </span>
                         {dir.priority >= 4 && (
-                          <span className="rounded-full bg-red-100 px-2 py-0.5 text-[10px] font-semibold text-red-700">
+                          <span className="rounded-full bg-red-500/20 px-2 py-0.5 text-[10px] font-semibold text-red-400">
                             중요도 {dir.priority}
                           </span>
                         )}
                       </div>
-                      <p className="text-sm text-gray-600 leading-relaxed">{dir.content}</p>
+                      <p className="text-sm text-slate-300 leading-relaxed">{dir.content}</p>
                     </div>
                   </div>
-                  <p className="mt-2 text-[10px] text-gray-400">
+                  <p className="mt-2 text-[10px] text-slate-500">
                     {new Date(dir.createdAt).toLocaleString('ko-KR', {
                       month: 'long',
                       day: 'numeric',
@@ -604,6 +624,16 @@ export default function DashboardPage() {
             })}
           </div>
         </section>
+      )}
+
+      {/* ── Modals ──────────────────────────────────────────── */}
+      <AddTaskModal isOpen={showAddModal} onClose={() => setShowAddModal(false)} />
+      {editingTask && (
+        <EditTaskModal
+          isOpen={!!editingTask}
+          onClose={() => setEditingTask(null)}
+          task={editingTask}
+        />
       )}
     </div>
   );

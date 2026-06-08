@@ -33,19 +33,19 @@ export default function LoginPage() {
   }
 
   return (
-    <div className="flex min-h-screen items-center justify-center bg-gradient-to-br from-slate-900 via-slate-800 to-blue-900 px-4">
+    <div className="flex min-h-screen items-center justify-center bg-gradient-to-br from-[#0a0f1e] via-[#0d1526] to-[#0a1628] px-4">
       {/* Ambient glow */}
       <div className="pointer-events-none absolute inset-0 overflow-hidden">
         <div className="absolute -left-40 -top-40 h-96 w-96 rounded-full bg-blue-500/10 blur-3xl" />
-        <div className="absolute -bottom-40 -right-40 h-96 w-96 rounded-full bg-emerald-500/10 blur-3xl" />
+        <div className="absolute -bottom-40 -right-40 h-96 w-96 rounded-full bg-blue-600/8 blur-3xl" />
       </div>
 
       <div className="relative w-full max-w-md animate-[fadeInUp_0.6s_ease-out]">
         {/* Card */}
-        <div className="rounded-2xl border border-white/10 bg-white/5 p-8 shadow-2xl shadow-black/40 backdrop-blur-xl">
+        <div className="rounded-2xl border border-slate-700/50 bg-slate-900/90 p-8 shadow-2xl shadow-black/50 backdrop-blur-xl">
           {/* Logo */}
           <div className="mb-8 text-center">
-            <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-2xl bg-emerald-500 text-2xl font-bold text-white shadow-lg shadow-emerald-500/30">
+            <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-2xl bg-gradient-to-br from-blue-600 to-blue-400 text-2xl font-bold text-white shadow-lg shadow-blue-500/30">
               봄
             </div>
             <h1 className="text-3xl font-bold tracking-tight text-white">봄날</h1>
@@ -68,7 +68,7 @@ export default function LoginPage() {
                 onChange={(e) => setEmail(e.target.value)}
                 placeholder="name@bomnal.net"
                 required
-                className="w-full rounded-xl border border-white/10 bg-white/5 px-4 py-3 text-sm text-white placeholder-slate-500 outline-none transition-all focus:border-emerald-500/50 focus:ring-2 focus:ring-emerald-500/20"
+                className="w-full rounded-xl border border-slate-700 bg-slate-800 px-4 py-3 text-sm text-white placeholder-slate-500 outline-none transition-all focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20"
               />
             </div>
 
@@ -86,7 +86,7 @@ export default function LoginPage() {
                 onChange={(e) => setPassword(e.target.value)}
                 placeholder="비밀번호를 입력하세요"
                 required
-                className="w-full rounded-xl border border-white/10 bg-white/5 px-4 py-3 text-sm text-white placeholder-slate-500 outline-none transition-all focus:border-emerald-500/50 focus:ring-2 focus:ring-emerald-500/20"
+                className="w-full rounded-xl border border-slate-700 bg-slate-800 px-4 py-3 text-sm text-white placeholder-slate-500 outline-none transition-all focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20"
               />
             </div>
 
@@ -134,9 +134,9 @@ export default function LoginPage() {
 
           {/* Divider */}
           <div className="my-6 flex items-center gap-3">
-            <div className="h-px flex-1 bg-white/10" />
+            <div className="h-px flex-1 bg-slate-700/50" />
             <span className="text-xs text-slate-500">데모 계정</span>
-            <div className="h-px flex-1 bg-white/10" />
+            <div className="h-px flex-1 bg-slate-700/50" />
           </div>
 
           {/* Demo accounts */}
@@ -148,7 +148,7 @@ export default function LoginPage() {
                 setPassword('admin123');
                 setError('');
               }}
-              className="flex w-full items-center justify-between rounded-lg border border-white/5 bg-white/[0.03] px-4 py-2.5 text-left transition-colors hover:bg-white/[0.06]"
+              className="flex w-full items-center justify-between rounded-lg border border-slate-700/30 bg-slate-800/50 px-4 py-2.5 text-left transition-colors hover:bg-slate-800 hover:border-slate-600"
             >
               <div>
                 <p className="text-sm font-medium text-slate-300">
@@ -156,7 +156,7 @@ export default function LoginPage() {
                 </p>
                 <p className="text-xs text-slate-500">admin@bomnal.net / admin123</p>
               </div>
-              <span className="rounded-md bg-emerald-500/10 px-2 py-0.5 text-[10px] font-semibold text-emerald-400">
+              <span className="rounded-md bg-red-500/10 px-2 py-0.5 text-[10px] font-semibold text-red-400">
                 ADMIN
               </span>
             </button>
@@ -168,7 +168,7 @@ export default function LoginPage() {
                 setPassword('user123');
                 setError('');
               }}
-              className="flex w-full items-center justify-between rounded-lg border border-white/5 bg-white/[0.03] px-4 py-2.5 text-left transition-colors hover:bg-white/[0.06]"
+              className="flex w-full items-center justify-between rounded-lg border border-slate-700/30 bg-slate-800/50 px-4 py-2.5 text-left transition-colors hover:bg-slate-800 hover:border-slate-600"
             >
               <div>
                 <p className="text-sm font-medium text-slate-300">
@@ -184,7 +184,7 @@ export default function LoginPage() {
         </div>
 
         {/* Footer */}
-        <p className="mt-6 text-center text-xs text-slate-500">
+        <p className="mt-6 text-center text-xs text-slate-600">
           &copy; 2026 봄날 시너지. All rights reserved.
         </p>
       </div>

@@ -24,40 +24,40 @@ const supplyRequests = [
 ];
 
 const statusColor: Record<string, string> = {
-  '승인 대기': 'bg-yellow-100 text-yellow-700',
-  '배송 중': 'bg-blue-100 text-blue-700',
-  '완료': 'bg-green-100 text-green-700',
+  '승인 대기': 'bg-yellow-500/20 text-yellow-400',
+  '배송 중': 'bg-blue-500/20 text-blue-400',
+  '완료': 'bg-green-500/20 text-green-400',
 };
 
 export default function OfficePage() {
   const [tab, setTab] = useState<'announcements' | 'approvals' | 'supplies'>('announcements');
 
   return (
-    <div className="min-h-screen bg-gray-50 p-6 lg:p-8">
+    <div className="p-6 lg:p-8">
       {/* Header */}
       <div className="mb-8 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <div>
-          <h1 className="text-2xl font-bold text-gray-900">행정</h1>
-          <p className="mt-1 text-sm text-gray-500">공지사항, 결재, 비품 요청 등 행정 업무를 관리합니다.</p>
+          <h1 className="text-2xl font-bold text-white">행정</h1>
+          <p className="mt-1 text-sm text-slate-400">공지사항, 결재, 비품 요청 등 행정 업무를 관리합니다.</p>
         </div>
         <div className="flex gap-2">
-          <button className="rounded-lg bg-emerald-600 px-4 py-2 text-sm font-medium text-white hover:bg-emerald-700 transition">
+          <button className="rounded-lg bg-blue-600 px-4 py-2 text-sm font-medium text-white hover:bg-blue-500 shadow-lg shadow-black/20 transition">
             공지 작성
           </button>
-          <button className="rounded-lg border border-emerald-600 px-4 py-2 text-sm font-medium text-emerald-600 hover:bg-emerald-50 transition">
+          <button className="rounded-lg border border-slate-600 bg-slate-800 px-4 py-2 text-sm font-medium text-slate-300 hover:bg-slate-700 transition">
             결재 요청
           </button>
         </div>
       </div>
 
       {/* Tab Navigation */}
-      <div className="mb-6 flex gap-1 rounded-lg bg-gray-100 p-1 w-fit">
+      <div className="mb-6 flex gap-1 rounded-lg bg-slate-800 border border-slate-700/50 p-1 w-fit">
         {([['announcements', '공지사항'], ['approvals', '결재 대기'], ['supplies', '비품 요청']] as const).map(([key, label]) => (
           <button
             key={key}
             onClick={() => setTab(key as 'announcements' | 'approvals' | 'supplies')}
             className={`rounded-md px-4 py-2 text-sm font-medium transition ${
-              tab === key ? 'bg-white text-emerald-600 shadow-sm' : 'text-gray-600 hover:text-gray-900'
+              tab === key ? 'bg-blue-600 text-white shadow-lg shadow-black/20' : 'text-slate-400 hover:bg-slate-700'
             }`}
           >
             {label}
@@ -67,19 +67,19 @@ export default function OfficePage() {
 
       {/* 공지사항 */}
       {tab === 'announcements' && (
-        <div className="rounded-xl bg-white p-6 shadow-sm">
-          <h2 className="mb-4 text-lg font-semibold text-gray-900">공지사항</h2>
-          <div className="divide-y divide-gray-100">
+        <div className="rounded-2xl bg-slate-900/80 border border-slate-700/50 p-6 shadow-lg shadow-black/20">
+          <h2 className="mb-4 text-lg font-semibold text-white">공지사항</h2>
+          <div className="divide-y divide-slate-700/50">
             {announcements.map((item) => (
               <div key={item.id} className="flex items-center gap-4 py-4 first:pt-0 last:pb-0">
                 {item.pinned && (
-                  <span className="rounded-full bg-red-100 px-2 py-0.5 text-xs font-medium text-red-600">고정</span>
+                  <span className="rounded-full bg-red-500/20 px-2 py-0.5 text-xs font-medium text-red-400">고정</span>
                 )}
                 <div className="flex-1 min-w-0">
-                  <p className="truncate font-medium text-gray-900">{item.title}</p>
-                  <p className="mt-1 text-sm text-gray-500">{item.author}</p>
+                  <p className="truncate font-medium text-white">{item.title}</p>
+                  <p className="mt-1 text-sm text-slate-400">{item.author}</p>
                 </div>
-                <span className="shrink-0 text-sm text-gray-400">{item.date}</span>
+                <span className="shrink-0 text-sm text-slate-500">{item.date}</span>
               </div>
             ))}
           </div>
@@ -90,20 +90,20 @@ export default function OfficePage() {
       {tab === 'approvals' && (
         <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
           {pendingApprovals.map((item) => (
-            <div key={item.id} className="rounded-xl bg-white p-6 shadow-sm">
+            <div key={item.id} className="rounded-2xl bg-slate-900/80 border border-slate-700/50 p-6 shadow-lg shadow-black/20">
               <div className="mb-3 flex items-center justify-between">
-                <span className="rounded-full bg-orange-100 px-3 py-1 text-xs font-medium text-orange-600">
+                <span className="rounded-full bg-orange-500/20 px-3 py-1 text-xs font-medium text-orange-400">
                   {item.type}
                 </span>
-                <span className="text-sm text-gray-400">{item.date}</span>
+                <span className="text-sm text-slate-500">{item.date}</span>
               </div>
-              <p className="font-medium text-gray-900">{item.requester}</p>
-              <p className="mt-1 text-sm text-gray-500">{item.detail}</p>
+              <p className="font-medium text-white">{item.requester}</p>
+              <p className="mt-1 text-sm text-slate-400">{item.detail}</p>
               <div className="mt-4 flex gap-2">
-                <button className="flex-1 rounded-lg bg-emerald-600 py-2 text-sm font-medium text-white hover:bg-emerald-700 transition">
+                <button className="flex-1 rounded-lg bg-blue-600 py-2 text-sm font-medium text-white hover:bg-blue-500 shadow-lg shadow-black/20 transition">
                   승인
                 </button>
-                <button className="flex-1 rounded-lg border border-gray-300 py-2 text-sm font-medium text-gray-600 hover:bg-gray-50 transition">
+                <button className="flex-1 rounded-lg border border-slate-600 bg-slate-800 py-2 text-sm font-medium text-slate-300 hover:bg-slate-700 transition">
                   반려
                 </button>
               </div>
@@ -114,24 +114,24 @@ export default function OfficePage() {
 
       {/* 비품 요청 */}
       {tab === 'supplies' && (
-        <div className="rounded-xl bg-white p-6 shadow-sm">
-          <h2 className="mb-4 text-lg font-semibold text-gray-900">비품 요청 현황</h2>
+        <div className="rounded-2xl bg-slate-900/80 border border-slate-700/50 p-6 shadow-lg shadow-black/20">
+          <h2 className="mb-4 text-lg font-semibold text-white">비품 요청 현황</h2>
           <div className="overflow-x-auto">
             <table className="w-full text-left text-sm">
               <thead>
-                <tr className="border-b border-gray-200 text-gray-500">
+                <tr className="border-b border-slate-700/50 text-slate-400">
                   <th className="pb-3 font-medium">요청 항목</th>
                   <th className="pb-3 font-medium">요청자</th>
                   <th className="pb-3 font-medium">요청일</th>
                   <th className="pb-3 font-medium">상태</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-gray-100">
+              <tbody className="divide-y divide-slate-700/50">
                 {supplyRequests.map((item) => (
-                  <tr key={item.id}>
-                    <td className="py-3 font-medium text-gray-900">{item.item}</td>
-                    <td className="py-3 text-gray-600">{item.requester}</td>
-                    <td className="py-3 text-gray-600">{item.date}</td>
+                  <tr key={item.id} className="hover:bg-slate-800/30 transition-colors">
+                    <td className="py-3 font-medium text-white">{item.item}</td>
+                    <td className="py-3 text-slate-300">{item.requester}</td>
+                    <td className="py-3 text-slate-400">{item.date}</td>
                     <td className="py-3">
                       <span className={`rounded-full px-2.5 py-1 text-xs font-medium ${statusColor[item.status]}`}>
                         {item.status}
