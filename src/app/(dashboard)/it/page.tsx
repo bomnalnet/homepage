@@ -36,10 +36,10 @@ const equipmentSummary = [
 
 const statusColor = (status: string) => {
   switch (status) {
-    case '대기': return 'bg-yellow-100 text-yellow-700';
-    case '처리중': return 'bg-blue-100 text-blue-700';
-    case '완료': return 'bg-green-100 text-green-700';
-    default: return 'bg-gray-100 text-gray-600';
+    case '대기': return 'bg-yellow-500/20 text-yellow-400';
+    case '처리중': return 'bg-blue-500/20 text-blue-400';
+    case '완료': return 'bg-green-500/20 text-green-400';
+    default: return 'bg-slate-700/50 text-slate-400';
   }
 };
 
@@ -51,14 +51,14 @@ export default function ITPage() {
     : itRequests.filter((r) => r.status === filter);
 
   return (
-    <div className="min-h-screen bg-gray-50 p-6 lg:p-8">
+    <div className="p-6 lg:p-8">
       {/* Header */}
       <div className="mb-8 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
-          <h1 className="text-2xl font-bold text-gray-900">전산</h1>
-          <p className="mt-1 text-sm text-gray-500">시스템 상태, IT 요청, 장비 현황을 관리합니다.</p>
+          <h1 className="text-2xl font-bold text-white">전산</h1>
+          <p className="mt-1 text-sm text-slate-400">시스템 상태, IT 요청, 장비 현황을 관리합니다.</p>
         </div>
-        <button className="inline-flex items-center gap-2 rounded-lg bg-emerald-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-emerald-700 transition-colors">
+        <button className="inline-flex items-center gap-2 rounded-lg bg-blue-600 px-4 py-2 text-sm font-medium text-white shadow-lg shadow-black/20 hover:bg-blue-500 transition-colors">
           <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
           </svg>
@@ -69,12 +69,12 @@ export default function ITPage() {
       {/* 시스템 상태 */}
       <div className="mb-8 grid grid-cols-2 gap-4 lg:grid-cols-4">
         {systemStatus.map((sys) => (
-          <div key={sys.label} className="rounded-xl bg-white border border-gray-200 shadow-sm p-5">
+          <div key={sys.label} className="rounded-2xl bg-slate-900/80 border border-slate-700/50 shadow-lg shadow-black/20 p-5">
             <div className="flex items-center gap-3">
               <span className="text-2xl">{sys.icon}</span>
               <div>
-                <p className="text-sm text-gray-500">{sys.label}</p>
-                <p className={`text-lg font-bold ${sys.ok ? 'text-green-600' : 'text-yellow-600'}`}>
+                <p className="text-sm text-slate-400">{sys.label}</p>
+                <p className={`text-lg font-bold ${sys.ok ? 'text-green-400' : 'text-yellow-400'}`}>
                   {sys.status} {sys.ok ? '✅' : '⚠️'}
                 </p>
               </div>
@@ -86,7 +86,7 @@ export default function ITPage() {
       {/* IT 요청 목록 */}
       <div className="mb-8">
         <div className="mb-4 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
-          <h2 className="text-lg font-semibold text-gray-800">IT 요청 목록</h2>
+          <h2 className="text-lg font-semibold text-slate-100">IT 요청 목록</h2>
           <div className="flex gap-2">
             {(['전체', '대기', '처리중', '완료'] as const).map((tab) => (
               <button
@@ -94,8 +94,8 @@ export default function ITPage() {
                 onClick={() => setFilter(tab)}
                 className={`rounded-lg px-3 py-1.5 text-sm font-medium transition-colors ${
                   filter === tab
-                    ? 'bg-emerald-600 text-white'
-                    : 'bg-white text-gray-600 border border-gray-200 hover:bg-gray-100'
+                    ? 'bg-blue-600 text-white shadow-lg shadow-black/20'
+                    : 'bg-slate-800 text-slate-400 border border-slate-600 hover:bg-slate-700'
                 }`}
               >
                 {tab}
@@ -103,29 +103,29 @@ export default function ITPage() {
             ))}
           </div>
         </div>
-        <div className="overflow-hidden rounded-xl bg-white border border-gray-200 shadow-sm">
+        <div className="overflow-hidden rounded-2xl bg-slate-900/80 border border-slate-700/50 shadow-lg shadow-black/20">
           <div className="overflow-x-auto">
             <table className="w-full text-sm">
               <thead>
-                <tr className="border-b border-gray-200 bg-gray-50">
-                  <th className="px-5 py-3 text-left font-semibold text-gray-700">요청일</th>
-                  <th className="px-5 py-3 text-left font-semibold text-gray-700">요청자</th>
-                  <th className="px-5 py-3 text-left font-semibold text-gray-700">유형</th>
-                  <th className="px-5 py-3 text-left font-semibold text-gray-700">내용</th>
-                  <th className="px-5 py-3 text-left font-semibold text-gray-700">상태</th>
+                <tr className="border-b border-slate-700/50 bg-slate-800/50">
+                  <th className="px-5 py-3 text-left font-semibold text-slate-300">요청일</th>
+                  <th className="px-5 py-3 text-left font-semibold text-slate-300">요청자</th>
+                  <th className="px-5 py-3 text-left font-semibold text-slate-300">유형</th>
+                  <th className="px-5 py-3 text-left font-semibold text-slate-300">내용</th>
+                  <th className="px-5 py-3 text-left font-semibold text-slate-300">상태</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-gray-100">
+              <tbody className="divide-y divide-slate-700/50">
                 {filteredRequests.map((req) => (
-                  <tr key={req.id} className="hover:bg-gray-50 transition-colors">
-                    <td className="px-5 py-3.5 text-gray-500 whitespace-nowrap">{req.date}</td>
-                    <td className="px-5 py-3.5 font-medium text-gray-900 whitespace-nowrap">{req.requester}</td>
-                    <td className="px-5 py-3.5 text-gray-700 whitespace-nowrap">
-                      <span className="inline-flex rounded-full bg-gray-100 px-2.5 py-0.5 text-xs font-medium text-gray-600">
+                  <tr key={req.id} className="hover:bg-slate-800/30 transition-colors">
+                    <td className="px-5 py-3.5 text-slate-400 whitespace-nowrap">{req.date}</td>
+                    <td className="px-5 py-3.5 font-medium text-white whitespace-nowrap">{req.requester}</td>
+                    <td className="px-5 py-3.5 text-slate-300 whitespace-nowrap">
+                      <span className="inline-flex rounded-full bg-slate-800/50 px-2.5 py-0.5 text-xs font-medium text-slate-400">
                         {req.type}
                       </span>
                     </td>
-                    <td className="px-5 py-3.5 text-gray-700">{req.content}</td>
+                    <td className="px-5 py-3.5 text-slate-300">{req.content}</td>
                     <td className="px-5 py-3.5">
                       <span className={`inline-flex rounded-full px-2.5 py-0.5 text-xs font-medium ${statusColor(req.status)}`}>
                         {req.status}
@@ -141,23 +141,23 @@ export default function ITPage() {
 
       {/* 장비 현황 */}
       <div>
-        <h2 className="mb-4 text-lg font-semibold text-gray-800">장비 현황</h2>
+        <h2 className="mb-4 text-lg font-semibold text-slate-100">장비 현황</h2>
         <div className="grid grid-cols-2 gap-4 lg:grid-cols-4">
           {equipmentSummary.map((eq) => {
             const usage = Math.round((eq.inUse / eq.total) * 100);
             return (
-              <div key={eq.label} className="rounded-xl bg-white border border-gray-200 shadow-sm p-5">
+              <div key={eq.label} className="rounded-2xl bg-slate-900/80 border border-slate-700/50 shadow-lg shadow-black/20 p-5">
                 <div className="flex items-center gap-3 mb-3">
                   <span className="text-2xl">{eq.icon}</span>
-                  <span className="text-sm font-medium text-gray-900">{eq.label}</span>
+                  <span className="text-sm font-medium text-white">{eq.label}</span>
                 </div>
                 <div className="flex items-baseline justify-between mb-2">
-                  <span className="text-xs text-gray-500">사용 중 {eq.inUse} / 전체 {eq.total}</span>
-                  <span className="text-xs font-semibold text-gray-700">{usage}%</span>
+                  <span className="text-xs text-slate-400">사용 중 {eq.inUse} / 전체 {eq.total}</span>
+                  <span className="text-xs font-semibold text-slate-300">{usage}%</span>
                 </div>
-                <div className="h-2 w-full rounded-full bg-gray-100">
+                <div className="h-2 w-full rounded-full bg-slate-800">
                   <div
-                    className={`h-2 rounded-full transition-all ${usage > 90 ? 'bg-red-500' : usage > 70 ? 'bg-yellow-500' : 'bg-emerald-500'}`}
+                    className={`h-2 rounded-full transition-all ${usage > 90 ? 'bg-red-500' : usage > 70 ? 'bg-yellow-500' : 'bg-green-500'}`}
                     style={{ width: `${usage}%` }}
                   />
                 </div>

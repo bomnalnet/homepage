@@ -80,27 +80,27 @@ const supplies: Supply[] = [
 
 const inspectionStatusColor = (status: string) => {
   switch (status) {
-    case '예정': return 'bg-blue-100 text-blue-700';
-    case '진행중': return 'bg-yellow-100 text-yellow-700';
-    case '완료': return 'bg-green-100 text-green-700';
-    default: return 'bg-gray-100 text-gray-600';
+    case '예정': return 'bg-blue-500/20 text-blue-400';
+    case '진행중': return 'bg-yellow-500/20 text-yellow-400';
+    case '완료': return 'bg-green-500/20 text-green-400';
+    default: return 'bg-slate-700/50 text-slate-400';
   }
 };
 
 export default function FacilityPage() {
   return (
-    <div className="min-h-screen bg-gray-50 p-6 lg:p-8">
+    <div className="p-6 lg:p-8">
       {/* Header */}
       <div className="mb-8">
-        <h1 className="text-2xl font-bold text-gray-900">시설</h1>
-        <p className="mt-1 text-sm text-gray-500">회의실 예약, 시설 점검, 비품 재고를 관리합니다.</p>
+        <h1 className="text-2xl font-bold text-white">시설</h1>
+        <p className="mt-1 text-sm text-slate-400">회의실 예약, 시설 점검, 비품 재고를 관리합니다.</p>
       </div>
 
       {/* 회의실 예약 현황 */}
       <div className="mb-8">
         <div className="mb-4 flex items-center justify-between">
-          <h2 className="text-lg font-semibold text-gray-800">회의실 예약 현황 (오늘)</h2>
-          <button className="inline-flex items-center gap-2 rounded-lg bg-blue-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-blue-700 transition-colors">
+          <h2 className="text-lg font-semibold text-slate-100">회의실 예약 현황 (오늘)</h2>
+          <button className="inline-flex items-center gap-2 rounded-lg bg-blue-600 px-4 py-2 text-sm font-medium text-white shadow-lg shadow-black/20 hover:bg-blue-500 transition-colors">
             <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
             </svg>
@@ -109,11 +109,11 @@ export default function FacilityPage() {
         </div>
         <div className="grid gap-4 xl:grid-cols-3">
           {meetingRooms.map((room) => (
-            <div key={room.id} className="rounded-xl bg-white border border-gray-200 shadow-sm p-5">
+            <div key={room.id} className="rounded-2xl bg-slate-900/80 border border-slate-700/50 shadow-lg shadow-black/20 p-5">
               <div className="flex items-center justify-between mb-4">
                 <div>
-                  <h3 className="font-semibold text-gray-900">{room.name}</h3>
-                  <p className="text-xs text-gray-500">{room.floor} &middot; {room.capacity}인</p>
+                  <h3 className="font-semibold text-white">{room.name}</h3>
+                  <p className="text-xs text-slate-500">{room.floor} &middot; {room.capacity}인</p>
                 </div>
               </div>
               <div className="space-y-2">
@@ -122,19 +122,19 @@ export default function FacilityPage() {
                     key={i}
                     className={`rounded-lg px-3 py-2 text-xs ${
                       slot.booked
-                        ? 'bg-blue-50 border border-blue-200'
-                        : 'bg-gray-50 border border-gray-200'
+                        ? 'bg-blue-500/20 border border-blue-500/30'
+                        : 'bg-slate-800/50 border border-slate-700/50'
                     }`}
                   >
                     <div className="flex items-center justify-between">
-                      <span className={`font-medium ${slot.booked ? 'text-blue-700' : 'text-gray-400'}`}>{slot.time}</span>
+                      <span className={`font-medium ${slot.booked ? 'text-blue-400' : 'text-slate-500'}`}>{slot.time}</span>
                       {slot.booked ? (
-                        <span className="text-blue-600">{slot.booker}</span>
+                        <span className="text-blue-300">{slot.booker}</span>
                       ) : (
-                        <span className="text-gray-400">예약 가능</span>
+                        <span className="text-slate-500">예약 가능</span>
                       )}
                     </div>
-                    {slot.title && <p className="mt-0.5 text-blue-500">{slot.title}</p>}
+                    {slot.title && <p className="mt-0.5 text-blue-400/80">{slot.title}</p>}
                   </div>
                 ))}
               </div>
@@ -146,24 +146,24 @@ export default function FacilityPage() {
       <div className="grid gap-8 xl:grid-cols-2">
         {/* 시설 점검 일정 */}
         <div>
-          <h2 className="mb-4 text-lg font-semibold text-gray-800">시설 점검 일정</h2>
-          <div className="overflow-hidden rounded-xl bg-white border border-gray-200 shadow-sm">
+          <h2 className="mb-4 text-lg font-semibold text-slate-100">시설 점검 일정</h2>
+          <div className="overflow-hidden rounded-2xl bg-slate-900/80 border border-slate-700/50 shadow-lg shadow-black/20">
             <div className="overflow-x-auto">
               <table className="w-full text-sm">
                 <thead>
-                  <tr className="border-b border-gray-200 bg-gray-50">
-                    <th className="px-5 py-3 text-left font-semibold text-gray-700">시설</th>
-                    <th className="px-5 py-3 text-left font-semibold text-gray-700">점검일</th>
-                    <th className="px-5 py-3 text-left font-semibold text-gray-700">유형</th>
-                    <th className="px-5 py-3 text-left font-semibold text-gray-700">상태</th>
+                  <tr className="border-b border-slate-700/50 bg-slate-800/50">
+                    <th className="px-5 py-3 text-left font-semibold text-slate-300">시설</th>
+                    <th className="px-5 py-3 text-left font-semibold text-slate-300">점검일</th>
+                    <th className="px-5 py-3 text-left font-semibold text-slate-300">유형</th>
+                    <th className="px-5 py-3 text-left font-semibold text-slate-300">상태</th>
                   </tr>
                 </thead>
-                <tbody className="divide-y divide-gray-100">
+                <tbody className="divide-y divide-slate-700/50">
                   {inspections.map((item) => (
-                    <tr key={item.id} className="hover:bg-gray-50 transition-colors">
-                      <td className="px-5 py-3.5 font-medium text-gray-900">{item.facility}</td>
-                      <td className="px-5 py-3.5 text-gray-500">{item.date}</td>
-                      <td className="px-5 py-3.5 text-gray-700">{item.type}</td>
+                    <tr key={item.id} className="hover:bg-slate-800/30 transition-colors">
+                      <td className="px-5 py-3.5 font-medium text-white">{item.facility}</td>
+                      <td className="px-5 py-3.5 text-slate-400">{item.date}</td>
+                      <td className="px-5 py-3.5 text-slate-300">{item.type}</td>
                       <td className="px-5 py-3.5">
                         <span className={`inline-flex rounded-full px-2.5 py-0.5 text-xs font-medium ${inspectionStatusColor(item.status)}`}>
                           {item.status}
@@ -179,21 +179,21 @@ export default function FacilityPage() {
 
         {/* 비품 재고 */}
         <div>
-          <h2 className="mb-4 text-lg font-semibold text-gray-800">비품 재고 현황</h2>
+          <h2 className="mb-4 text-lg font-semibold text-slate-100">비품 재고 현황</h2>
           <div className="space-y-3">
             {supplies.map((item) => {
               const isLow = item.stock <= item.threshold;
               const pct = Math.min((item.stock / (item.threshold * 3)) * 100, 100);
               return (
-                <div key={item.id} className="rounded-xl bg-white border border-gray-200 shadow-sm p-4">
+                <div key={item.id} className="rounded-2xl bg-slate-900/80 border border-slate-700/50 shadow-lg shadow-black/20 p-4">
                   <div className="flex items-center justify-between mb-2">
-                    <span className="text-sm font-medium text-gray-900">{item.item}</span>
-                    <span className={`text-sm font-semibold ${isLow ? 'text-red-600' : 'text-gray-700'}`}>
+                    <span className="text-sm font-medium text-white">{item.item}</span>
+                    <span className={`text-sm font-semibold ${isLow ? 'text-red-400' : 'text-slate-300'}`}>
                       {item.stock}{item.unit}
-                      {isLow && <span className="ml-1.5 text-xs font-normal text-red-500">부족</span>}
+                      {isLow && <span className="ml-1.5 text-xs font-normal text-red-400">부족</span>}
                     </span>
                   </div>
-                  <div className="h-2 w-full rounded-full bg-gray-100">
+                  <div className="h-2 w-full rounded-full bg-slate-800">
                     <div
                       className={`h-2 rounded-full transition-all ${isLow ? 'bg-red-500' : 'bg-green-500'}`}
                       style={{ width: `${pct}%` }}
