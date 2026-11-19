@@ -189,8 +189,18 @@
   .m-ok{background:linear-gradient(135deg,#2563eb,#0ea5e9);color:#fff;font-weight:500}
 
   /* Reveal */
-  .rv{opacity:0;transform:translateY(40px);transition:opacity .9s cubic-bezier(.2,.7,.2,1),transform .9s cubic-bezier(.2,.7,.2,1)}
-  .rv.in{opacity:1;transform:none}
+  .js .rv{opacity:0;transform:translateY(40px);transition:opacity .9s cubic-bezier(.2,.7,.2,1),transform .9s cubic-bezier(.2,.7,.2,1)}
+  .js .rv.in{opacity:1;transform:none}
+
+  /* Company info */
+  .corp{display:grid;grid-template-columns:1fr 1.4fr;gap:40px;align-items:start;padding:44px;border-radius:24px;background:var(--card);border:1px solid var(--line)}
+  .corp-name{font-size:clamp(24px,3vw,34px);font-weight:800;letter-spacing:-.5px;line-height:1.3;word-break:keep-all}
+  .corp-en{margin-top:6px;font-size:13px;color:var(--muted);letter-spacing:1.5px}
+  .corp-desc{margin-top:16px;font-size:14px;color:var(--muted)}
+  .corp-tbl{width:100%;border-collapse:collapse;font-size:14px}
+  .corp-tbl th,.corp-tbl td{padding:13px 0;border-bottom:1px solid var(--line);text-align:left;vertical-align:top}
+  .corp-tbl th{width:130px;color:var(--muted);font-weight:500}
+  .corp-tbl td a:hover{color:var(--cyan)}
   .d1{transition-delay:.1s}.d2{transition-delay:.2s}.d3{transition-delay:.3s}.d4{transition-delay:.4s}
 
   @media(max-width:960px){
@@ -211,9 +221,11 @@
   }
   @media(prefers-reduced-motion:reduce){
     *,*::before,*::after{animation:none!important;transition:none!important}
-    .rv{opacity:1;transform:none}
+    .js .rv{opacity:1;transform:none}
   }
+  @media(max-width:960px){ .corp{grid-template-columns:1fr;padding:28px 22px;gap:24px} .corp-tbl th{width:110px} }
 </style>
+<script>document.documentElement.className+=' js';</script>
 </head>
 <body>
 
@@ -223,8 +235,8 @@
     <a href="#top" class="brand">
       <div class="brand-mark en">S</div>
       <div class="brand-txt">
-        <b>스프링데이어쏘시에이츠</b>
-        <span class="en">SPRINGDAY ASSOCIATES</span>
+        <b>주식회사 스프링데이어쏘시에이츠</b>
+        <span class="en">SPRINGDAY ASSOCIATES CO., LTD.</span>
       </div>
     </a>
     <div class="nav-links">
@@ -232,6 +244,7 @@
       <a href="#ai">AI 솔루션</a>
       <a href="#process">프로세스</a>
       <a href="#systems">업무 시스템</a>
+      <a href="#company">회사 정보</a>
       <a href="#contact">문의</a>
     </div>
     <a href="tel:01048363171" class="nav-cta">상담 문의</a>
@@ -393,6 +406,33 @@
   </div>
 </section>
 
+<!-- ============ COMPANY INFO ============ -->
+<section class="sec" id="company" style="padding-bottom:0">
+  <div class="wrap">
+    <div class="sec-head">
+      <div class="tag en">COMPANY</div>
+      <h2>회사 정보</h2>
+    </div>
+    <div class="corp">
+      <div>
+        <div class="corp-name">주식회사 스프링데이어쏘시에이츠</div>
+        <div class="corp-en en">SPRINGDAY ASSOCIATES CO., LTD.</div>
+        <p class="corp-desc">AI 대행 및 광고 대행 전문 기업으로, 생성형 AI 기반 콘텐츠 제작·업무 자동화와 온라인 광고 운영 서비스를 제공합니다.</p>
+      </div>
+      <table class="corp-tbl">
+        <tr><th>법인명(상호)</th><td>주식회사 스프링데이어쏘시에이츠</td></tr>
+        <tr><th>영문명</th><td>SPRINGDAY ASSOCIATES CO., LTD.</td></tr>
+        <tr><th>대표자</th><td>강일성</td></tr>
+        <tr><th>사업자등록번호</th><td>397-86-02454</td></tr>
+        <tr><th>사업장 주소</th><td>경기도 하남시 미사강변한강로 135, 스카이폴리스 다동 434호</td></tr>
+        <tr><th>전화</th><td><a href="tel:03180283175">031-8028-3175</a> / <a href="tel:01048363171">010-4836-3171</a></td></tr>
+        <tr><th>이메일</th><td><a href="mailto:bomnalai@bomnal.ai.kr">bomnalai@bomnal.ai.kr</a></td></tr>
+        <tr><th>홈페이지</th><td>https://bomnal.ai.kr</td></tr>
+      </table>
+    </div>
+  </div>
+</section>
+
 <!-- ============ CONTACT ============ -->
 <section class="sec" id="contact" style="padding-bottom:0">
   <div class="wrap">
@@ -417,15 +457,16 @@
         <p>AI 대행 · 광고 대행 전문 기업. 기술과 크리에이티브로 브랜드의 성장을 돕습니다.</p>
       </div>
       <dl class="ft-info">
-        <dt>상호</dt><dd>주식회사 스프링데이어쏘시에이츠</dd>
-        <dt>대표</dt><dd>강일성</dd>
+        <dt>법인명</dt><dd>주식회사 스프링데이어쏘시에이츠</dd>
+        <dt>대표자</dt><dd>강일성</dd>
         <dt>주소</dt><dd>경기도 하남시 미사강변한강로 135, 스카이폴리스 다동 434호</dd>
         <dt>사업자등록번호</dt><dd>397-86-02454</dd>
         <dt>연락처</dt><dd><a href="tel:01048363171">010-4836-3171</a> / <a href="tel:03180283175">031-8028-3175</a></dd>
+        <dt>이메일</dt><dd><a href="mailto:bomnalai@bomnal.ai.kr">bomnalai@bomnal.ai.kr</a></dd>
       </dl>
     </div>
     <div class="copy">
-      <span>&copy; <span id="yr">2026</span> SPRINGDAY ASSOCIATES Co., Ltd. All rights reserved.</span>
+      <span>&copy; <span id="yr">2026</span> 주식회사 스프링데이어쏘시에이츠 (SPRINGDAY ASSOCIATES CO., LTD.) All rights reserved.</span>
       <span>AI Agency · Advertising Agency</span>
     </div>
   </div>
